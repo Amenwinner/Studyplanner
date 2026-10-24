@@ -9,6 +9,27 @@
     <meta property="og:description" content="Comprehensive academic study companion for 6 university courses: AI slide quizzing, flashcards, topic summarization, and detailed weekly performance reports." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      // Suppress benign dev-server WebSocket disconnect errors in iFrame dev previews
+      window.addEventListener('unhandledrejection', function (event) {
+        if (
+          event.reason &&
+          (event.reason.message?.includes('WebSocket') ||
+            String(event.reason).includes('WebSocket') ||
+            event.reason.stack?.includes('@vite/client'))
+        ) {
+          event.preventDefault();
+        }
+      });
+      window.addEventListener('error', function (event) {
+        if (
+          event.message?.includes('WebSocket') ||
+          event.filename?.includes('@vite/client')
+        ) {
+          event.preventDefault();
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
