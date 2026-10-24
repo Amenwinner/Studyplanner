@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SeptemStudy - 7-Course Slide Quiz & Weekly Performance Tracker</title>
+    <meta name="description" content="Comprehensive academic study companion for 6 university courses: AI slide quizzing, flashcards, topic summarization, and detailed weekly performance reports." />
+    <meta property="og:title" content="SeptemStudy - 7-Course Slide Quiz & Weekly Performance Tracker" />
+    <meta property="og:description" content="Comprehensive academic study companion for 6 university courses: AI slide quizzing, flashcards, topic summarization, and detailed weekly performance reports." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      // 1. GitHub Pages trailing-slash fix: Ensure relative asset paths resolve to repo folder
+      (function () {
+        var p = window.location.pathname;
+        if (p && !p.endsWith('/') && !p.split('/').pop().includes('.')) {
+          window.location.replace(
+            window.location.origin + p + '/' + window.location.search + window.location.hash
+          );
+        }
+      })();
+
+      // 2. Track mounting state for diagnostic fallback
+      window.__septemstudy_mounted = false;
+      setTimeout(function () {
+        if (!window.__septemstudy_mounted) {
+          var statusEl = document.getElementById('septem-loader-status');
+          var actionsEl = document.getElementById('septem-loader-actions');
+          if (statusEl) {
+            statusEl.innerHTML =
+              'Workspace is taking longer than expected to load.<br/><span style="display:inline-block;margin-top:6px;font-size:12px;color:#93c5fd;">If using GitHub Pages, ensure your URL ends with a slash (<code>/</code>).</span>';
+          }
+          if (actionsEl) {
+            actionsEl.style.display = 'flex';
+          }
+        }
+      }, 3500);
+
+      // 3. Catch script resource loading errors (e.g. 404 on assets)
+      window.addEventListener(
+        'error',
+        function (event) {
+          if (
+            event.message?.includes('WebSocket') ||
+            event.filename?.includes('@vite/client')
+          ) {
+            event.preventDefault();
+            return;
+          }
+          if (event.target && event.target.tagName === 'SCRIPT') {
+            var statusEl = document.getElementById('septem-loader-status');
+            var actionsEl = document.getElementById('septem-loader-actions');
+            if (statusEl) {
+              statusEl.innerHTML =
+                '<span style="color:#f87171;font-weight:600;">Unable to load application asset:</span><br/><code style="display:inline-block;margin-top:6px;font-size:11px;color:#cbd5e1;background:#1e293b;padding:4px 8px;border-radius:4px;word-break:break-all;">' +
+                (event.target.src || 'script') +
+                '</code>';
+            }
+            if (actionsEl) {
+              actionsEl.style.display = 'flex';
+            }
+          }
+        },
+        true
+      );
+
+      // 4. Suppress benign dev-server WebSocket disconnect errors in iFrame dev previews
+      window.addEventListener('unhandledrejection', function (event) {
+        if (
+          event.reason &&
+          (event.reason.message?.includes('WebSocket') ||
+            String(event.reason).includes('WebSocket') ||
+            event.reason.stack?.includes('@vite/client'))
+        ) {
+          event.preventDefault();
+        }
+      });
+    </script>
+    <script type="module" crossorigin src="./assets/index-DankILDN.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DgybV-QG.css">
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div id="root">
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #0f172a; color: #94a3b8; font-family: system-ui, -apple-system, sans-serif; padding: 20px;">
+        <div style="text-align: center; max-width: 440px; width: 100%;">
+          <div style="width: 44px; height: 44px; border: 3px solid #334155; border-top-color: #6366f1; border-radius: 50%; margin: 0 auto 16px; animation: septem-spin 0.8s linear infinite;"></div>
+          <div style="font-size: 16px; font-weight: 600; color: #f8fafc; margin-bottom: 6px;">SeptemStudy</div>
+          <div id="septem-loader-status" style="font-size: 13px; color: #94a3b8; line-height: 1.5;">Loading 6-course academic workspace...</div>
+          <div id="septem-loader-actions" style="display: none; margin-top: 18px; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button onclick="window.location.reload()" style="background: #4f46e5; color: white; border: none; font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Reload Page</button>
+            <button onclick="localStorage.clear(); window.location.reload();" style="background: #334155; color: #cbd5e1; border: none; font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Clear Cache & Reload</button>
+          </div>
+        </div>
+      </div>
+      <style>@keyframes septem-spin{to{transform:rotate(360deg)}}</style>
+    </div>
+  </body>
+</html>
+

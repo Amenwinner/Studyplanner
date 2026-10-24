@@ -4,12 +4,19 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(({ command }) => {
+  let base = './';
+  if (command === 'build' && process.env.VITE_BASE_PATH) {
+    base = process.env.VITE_BASE_PATH.endsWith('/')
+      ? process.env.VITE_BASE_PATH
+      : `${process.env.VITE_BASE_PATH}/`;
+  }
+
   return {
-    base: command === 'build' ? (process.env.VITE_BASE_PATH || './') : '/',
+    base,
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve('.'),
       },
     },
     server: {
