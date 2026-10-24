@@ -35,7 +35,7 @@ export const CourseSelectorBar: React.FC<CourseSelectorBarProps> = ({
   const activeCourse = courses.find((c) => c.id === activeCourseId) || courses[0];
 
   const tabs: { id: ActiveTab; label: string; icon: React.ElementType; badge?: string }[] = [
-    { id: 'dashboard', label: '6-Course Dashboard', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'slides', label: 'Lecture Slides', icon: Presentation },
     { id: 'summary', label: 'Topic Summary', icon: FileText },
     { id: 'quiz', label: 'Slide Quiz', icon: HelpCircle },

@@ -2,11 +2,11 @@ import { Course, QuizAttempt, WeeklyInsightReport } from '../types';
 import { INITIAL_COURSES, INITIAL_QUIZ_ATTEMPTS, INITIAL_WEEKLY_REPORT } from '../data/initialData';
 
 const STORAGE_KEYS = {
-  COURSES: 'septemstudy_courses_v3',
-  QUIZ_ATTEMPTS: 'septemstudy_quiz_attempts_v3',
-  WEEKLY_REPORTS: 'septemstudy_weekly_reports_v3',
-  CURRENT_WEEK: 'septemstudy_current_week_v3',
-  ACTIVE_COURSE: 'septemstudy_active_course_v3',
+  COURSES: 'septemstudy_dynamic_courses_v4',
+  QUIZ_ATTEMPTS: 'septemstudy_dynamic_quiz_attempts_v4',
+  WEEKLY_REPORTS: 'septemstudy_dynamic_weekly_reports_v4',
+  CURRENT_WEEK: 'septemstudy_dynamic_current_week_v4',
+  ACTIVE_COURSE: 'septemstudy_dynamic_active_course_v4',
 };
 
 export function loadCourses(): Course[] {
@@ -14,7 +14,7 @@ export function loadCourses(): Course[] {
     const data = localStorage.getItem(STORAGE_KEYS.COURSES);
     if (data) {
       const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length >= 6) {
+      if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed;
       }
     }

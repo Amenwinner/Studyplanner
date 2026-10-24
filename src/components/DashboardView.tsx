@@ -79,14 +79,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="relative z-10 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold mb-3 border border-indigo-500/30">
             <Flame className="w-3.5 h-3.5 text-amber-400" />
-            <span>Semester Week {currentWeek} Overview &bull; 6 Active Courses</span>
+            <span>Semester Week {currentWeek} Overview &bull; {courses.length} Active Courses</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
-            Stay on top of every lecture, slide deck, and weekly exam prep.
+            Weekly Course Revision & Slide-Grounded Quizzing
           </h1>
           <p className="text-sm text-slate-300 mb-6 leading-relaxed">
             Upload your weekly lecture slides to automatically generate high-yield active-recall quizzes,
-            spaced-repetition flashcards, and university-grade cheat sheets for all 6 of your classes.
+            spaced-repetition flashcards, and topic summaries tailored strictly to your course content.
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -120,7 +120,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <BookOpen className="w-4 h-4 text-blue-500" />
           </div>
           <div className="text-2xl font-bold text-slate-900 dark:text-white">
-            6 Courses
+            {courses.length} Courses
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             All loaded in semester track
@@ -185,7 +185,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 Action Recommended for Week {currentWeek}:
               </p>
               <p className="text-amber-700 dark:text-amber-300">
-                {coursesNeedingAttention.length} of your 6 courses (
+                {coursesNeedingAttention.length} of your {courses.length} courses (
                 {coursesNeedingAttention.map((c) => c.code).join(', ')}) either need slides
                 uploaded or have not completed a quiz attempt yet.
               </p>
@@ -200,19 +200,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       )}
 
-      {/* 6-Course Semester Cards Grid */}
+      {/* Course Semester Cards Grid */}
       <div>
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-              6-Course Semester Matrix (Week {currentWeek})
+              Course Semester Matrix (Week {currentWeek})
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               Select any course to view lecture slides, launch active-recall quizzes, or read topic summaries.
             </p>
           </div>
           <span className="text-xs font-semibold text-slate-500">
-            6 / 6 Active
+            {courses.length} / {courses.length} Active
           </span>
         </div>
 

@@ -25,6 +25,9 @@ import {
   BookMarked,
   TrendingUp,
   BrainCircuit,
+  Presentation,
+  Upload,
+  Plus,
   X
 } from 'lucide-react';
 
@@ -748,153 +751,224 @@ export const QuizView: React.FC<QuizViewProps> = ({
       ) : (
         /* Quiz Selection & Question Bank Launchpad */
         <div className="space-y-6">
-          {/* Question Bank Overview & Custom Exam Configurator */}
-          <div className="bg-gradient-to-r from-indigo-50/70 via-white to-blue-50/60 dark:from-slate-800 dark:via-slate-800 dark:to-indigo-950/30 rounded-2xl border border-indigo-200 dark:border-indigo-800 p-6 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h3 className="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                  <BrainCircuit className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                  <span>Configure Multi-Topic Exam / Quiz on Every Topic</span>
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  You have <strong className="text-indigo-600 dark:text-indigo-400">{allWeekQuestions.length} questions</strong> in the bank across{' '}
-                  <strong className="text-slate-800 dark:text-slate-200">{courseTopics.length || 1} topics</strong>.
-                </p>
+          {!weekModule?.slidesRaw?.trim() ? (
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 sm:p-12 text-center shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-4 border border-blue-200 dark:border-blue-900 shadow-sm">
+                <Presentation className="w-8 h-8" />
               </div>
-
-              {allWeekQuestions.length < 60 && (
+              <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-2">
+                No Slides Uploaded for Week {currentWeek}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto mb-6 leading-relaxed">
+                All quiz questions are generated dynamically and strictly derived from the slides you provide. Upload or paste your lecture slides for {course.code} (Week {currentWeek}) to create active-recall quizzes.
+              </p>
+              <button
+                onClick={() => onNavigateTab('slides')}
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs sm:text-sm inline-flex items-center gap-2 shadow-md shadow-blue-600/25 transition-all"
+              >
+                <Upload className="w-4 h-4" />
+                <span>Upload or Paste Slides for Week {currentWeek}</span>
+              </button>
+            </div>
+          ) : allWeekQuestions.length === 0 ? (
+            <div className="bg-gradient-to-r from-indigo-50/90 via-white to-blue-50/90 dark:from-slate-800 dark:via-slate-800 dark:to-indigo-950/40 rounded-2xl border border-indigo-200 dark:border-indigo-800 p-8 sm:p-12 text-center shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-4 border border-indigo-200 dark:border-indigo-800 shadow-sm">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-2">
+                Week {currentWeek} Slides Ready!
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto mb-6 leading-relaxed">
+                Your lecture material for <strong>{course.code}</strong> is loaded. Generate a customized active-recall quiz strictly derived from your uploaded slide text.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  onClick={() => onGenerateQuiz(5, 'Balanced')}
+                  disabled={isGeneratingQuiz}
+                  className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs inline-flex items-center gap-2 shadow-md shadow-indigo-600/25 transition-all"
+                >
+                  {isGeneratingQuiz ? <Loader2 className="w-4 h-4 animate-spin" /> : <HelpCircle className="w-4 h-4" />}
+                  <span>{isGeneratingQuiz ? 'Creating Quiz...' : 'Generate 5-Question Quiz'}</span>
+                </button>
+                <button
+                  onClick={() => onGenerateQuiz(10, 'Exam-Level')}
+                  disabled={isGeneratingQuiz}
+                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs inline-flex items-center gap-2 shadow-md shadow-blue-600/25 transition-all"
+                >
+                  {isGeneratingQuiz ? <Loader2 className="w-4 h-4 animate-spin" /> : <Award className="w-4 h-4" />}
+                  <span>{isGeneratingQuiz ? 'Creating Exam...' : 'Generate 10-Question Exam'}</span>
+                </button>
                 <button
                   onClick={handleBatchGenerate60}
-                  disabled={isBatchGenerating || !weekModule?.slidesRaw?.trim()}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-indigo-600/20"
+                  disabled={isBatchGenerating}
+                  className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs inline-flex items-center gap-2 shadow-md shadow-purple-600/25 transition-all"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Batch Generate to 60+ Questions</span>
+                  {isBatchGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                  <span>{isBatchGenerating ? 'Synthesizing Bank...' : '⚡ Generate 60+ Question Bank'}</span>
                 </button>
-              )}
-            </div>
-
-            {/* Exam Options Controls */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mb-6">
-              {/* Question count */}
-              <div>
-                <label className="block font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
-                  Number of Exam Questions
-                </label>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {[10, 20, 30, Math.min(60, allWeekQuestions.length || 60)].map((cnt) => (
-                    <button
-                      key={cnt}
-                      onClick={() => setSelectedQuestionLimit(cnt)}
-                      className={`px-3 py-1.5 rounded-lg font-bold border transition-all ${
-                        selectedQuestionLimit === cnt
-                          ? 'bg-indigo-600 text-white border-transparent'
-                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
-                      }`}
-                    >
-                      {cnt === 60 || (cnt === allWeekQuestions.length && cnt > 30) ? 'Full Bank' : `${cnt} Qs`}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Topic Filter */}
-              <div className="md:col-span-2">
-                <label className="block font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
-                  Filter by Topic (or "Every Topic" to quiz across all coursework)
-                </label>
-                <select
-                  value={selectedTopicFilter}
-                  onChange={(e) => setSelectedTopicFilter(e.target.value)}
-                  className="w-full text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-2 focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">🎯 Every Topic in Course (Comprehensive Multi-Topic Coverage)</option>
-                  {courseTopics.map((top) => (
-                    <option key={top} value={top}>
-                      Topic: {top}
-                    </option>
-                  ))}
-                </select>
               </div>
             </div>
-
-            <button
-              onClick={handleLaunchComprehensiveAllTopics}
-              disabled={allWeekQuestions.length === 0}
-              className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-50 text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all"
-            >
-              <BrainCircuit className="w-4 h-4" />
-              <span>Launch {selectedQuestionLimit}-Question Exam across {selectedTopicFilter === 'all' ? 'Every Topic' : selectedTopicFilter}</span>
-            </button>
-          </div>
-
-          {/* Topics Breakdown Badges */}
-          {courseTopics.length > 0 && (
-            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400 mb-3">
-                Covered Coursework Topics ({courseTopics.length})
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {courseTopics.map((top) => {
-                  const qCount = allWeekQuestions.filter((q) => (q.topic || q.conceptTested) === top).length;
-                  return (
-                    <button
-                      key={top}
-                      onClick={() => {
-                        setSelectedTopicFilter(top);
-                        const topicQs = allWeekQuestions.filter((q) => (q.topic || q.conceptTested) === top);
-                        if (topicQs.length > 0) {
-                          handleStartExam(topicQs, `${course.code}: ${top} Drill`);
-                        }
-                      }}
-                      className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-indigo-950 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 transition-colors"
-                    >
-                      <span>{top}</span>
-                      <span className="px-1.5 py-0.2 rounded text-[10px] bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold">
-                        {qCount} Qs
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Individual Weekly Quizzes */}
-          <div className="space-y-3">
-            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
-              Slide Quiz Sets for Week {currentWeek}
-            </h4>
-
-            {quizzes.map((quiz, idx) => (
-              <div
-                key={quiz.id}
-                className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm flex items-center justify-between gap-4"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-sm text-slate-900 dark:text-white">
-                      {quiz.title}
-                    </span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                      {quiz.difficulty}
-                    </span>
+          ) : (
+            <>
+              {/* Question Bank Overview & Custom Exam Configurator */}
+              <div className="bg-gradient-to-r from-indigo-50/70 via-white to-blue-50/60 dark:from-slate-800 dark:via-slate-800 dark:to-indigo-950/30 rounded-2xl border border-indigo-200 dark:border-indigo-800 p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                  <div>
+                    <h3 className="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                      <BrainCircuit className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                      <span>Configure Multi-Topic Exam / Quiz on Every Topic</span>
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      You have <strong className="text-indigo-600 dark:text-indigo-400">{allWeekQuestions.length} questions</strong> in the bank across{' '}
+                      <strong className="text-slate-800 dark:text-slate-200">{courseTopics.length || 1} topics</strong>.
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-500">
-                    {quiz.questions.length} Questions &bull; Created on {new Date(quiz.createdAt).toLocaleDateString()}
-                  </p>
+
+                  {allWeekQuestions.length < 60 && (
+                    <button
+                      onClick={handleBatchGenerate60}
+                      disabled={isBatchGenerating || !weekModule?.slidesRaw?.trim()}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-indigo-600/20"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Batch Generate to 60+ Questions</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Exam Options Controls */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mb-6">
+                  {/* Question count */}
+                  <div>
+                    <label className="block font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
+                      Number of Exam Questions
+                    </label>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {[10, 20, 30, Math.min(60, allWeekQuestions.length || 60)].map((cnt) => (
+                        <button
+                          key={cnt}
+                          onClick={() => setSelectedQuestionLimit(cnt)}
+                          className={`px-3 py-1.5 rounded-lg font-bold border transition-all ${
+                            selectedQuestionLimit === cnt
+                              ? 'bg-indigo-600 text-white border-transparent'
+                              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                          }`}
+                        >
+                          {cnt === 60 || (cnt === allWeekQuestions.length && cnt > 30) ? 'Full Bank' : `${cnt} Qs`}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Topic Filter */}
+                  <div className="md:col-span-2">
+                    <label className="block font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
+                      Filter by Topic (or "Every Topic" to quiz across all coursework)
+                    </label>
+                    <select
+                      value={selectedTopicFilter}
+                      onChange={(e) => setSelectedTopicFilter(e.target.value)}
+                      className="w-full text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-2 focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="all">🎯 Every Topic in Course (Comprehensive Multi-Topic Coverage)</option>
+                      {courseTopics.map((top) => (
+                        <option key={top} value={top}>
+                          Topic: {top}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <button
-                  onClick={() => handleStartExam(quiz.questions, quiz.title)}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 shrink-0"
+                  onClick={handleLaunchComprehensiveAllTopics}
+                  disabled={allWeekQuestions.length === 0}
+                  className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-50 text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all"
                 >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                  <span>Start Quiz</span>
+                  <BrainCircuit className="w-4 h-4" />
+                  <span>Launch {selectedQuestionLimit}-Question Exam across {selectedTopicFilter === 'all' ? 'Every Topic' : selectedTopicFilter}</span>
                 </button>
               </div>
-            ))}
-          </div>
+
+              {/* Topics Breakdown Badges */}
+              {courseTopics.length > 0 && (
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400 mb-3">
+                    Covered Coursework Topics ({courseTopics.length})
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {courseTopics.map((top) => {
+                      const qCount = allWeekQuestions.filter((q) => (q.topic || q.conceptTested) === top).length;
+                      return (
+                        <button
+                          key={top}
+                          onClick={() => {
+                            setSelectedTopicFilter(top);
+                            const topicQs = allWeekQuestions.filter((q) => (q.topic || q.conceptTested) === top);
+                            if (topicQs.length > 0) {
+                              handleStartExam(topicQs, `${course.code}: ${top} Drill`);
+                            }
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-indigo-950 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 transition-colors"
+                        >
+                          <span>{top}</span>
+                          <span className="px-1.5 py-0.2 rounded text-[10px] bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold">
+                            {qCount} Qs
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Individual Weekly Quizzes */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                    Slide Quiz Sets for Week {currentWeek}
+                  </h4>
+                  <button
+                    onClick={() => onGenerateQuiz(5, 'Balanced')}
+                    disabled={isGeneratingQuiz}
+                    className="text-xs font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 flex items-center gap-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Generate Another Set</span>
+                  </button>
+                </div>
+
+                {quizzes.map((quiz, idx) => (
+                  <div
+                    key={quiz.id}
+                    className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm flex items-center justify-between gap-4"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-sm text-slate-900 dark:text-white">
+                          {quiz.title}
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                          {quiz.difficulty}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500">
+                        {quiz.questions.length} Questions &bull; Created on {new Date(quiz.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => handleStartExam(quiz.questions, quiz.title)}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 shrink-0"
+                    >
+                      <HelpCircle className="w-3.5 h-3.5" />
+                      <span>Start Quiz</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
 

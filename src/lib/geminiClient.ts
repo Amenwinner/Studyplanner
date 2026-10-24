@@ -242,47 +242,33 @@ export async function generateWeeklyReport(params: {
     console.warn('API unreachable, using client report analysis fallback:', err);
   }
 
+  const courseNames = (params.coursesData || []).map((c) => c.name || c.code || 'Course');
   const strongCourses = params.coursesData
     .filter((c) => (c.quizzesTaken || 0) > 0)
-    .map((c) => c.name);
+    .map((c) => c.name || c.code);
+
+  const atRisk = courseNames.slice(2, 4).map((name) => ({
+    courseName: name,
+    reason: 'Upload weekly slide decks to benchmark comprehension with an active-recall quiz.',
+    actionableNextStep: `Paste or upload Week ${params.weekNumber} slides and generate a quick quiz.`,
+  }));
+
+  const recommendedSplit = courseNames.map((name) => ({
+    courseName: name,
+    recommendedHours: 3.5,
+    priorityFocusTopic: `Week ${params.weekNumber} slides revision & active recall`,
+  }));
 
   return {
-    weeklyHeadline: 'Solid Active Recall Cadence with Balanced Time Distribution',
+    weeklyHeadline: `Weekly Study & Revision Summary (Week ${params.weekNumber})`,
     summary: `For Week ${params.weekNumber}, you logged ${Math.round(
       params.totalStudyMinutes / 60
-    )} hours of active study across your semester curriculum. Active recall quizzes have established good foundational baseline retention.`,
-    overallScoreGrade: 'B+',
-    strongestCourses: strongCourses.length > 0 ? strongCourses : ['B2C Marketing & Consumer Behavior', 'Corporate Finance'],
-    atRiskCourses: [
-      {
-        courseName: 'Enterprise Resource Planning',
-        reason: 'Complex multi-step integration diagrams require additional active recall cycles.',
-        actionableNextStep: 'Complete a 15-question targeted quiz on ERP architecture and review the topic cheat sheet.',
-      },
-      {
-        courseName: 'Business Mathematics',
-        reason: 'Quantitative derivation speed benefits from daily 10-minute spaced repetition.',
-        actionableNextStep: 'Work through 5 calculus optimization problems without referencing notes.',
-      }
-    ],
-    recommendedStudySplit: [
-      {
-        courseName: 'Enterprise Resource Planning',
-        recommendedHours: 5,
-        priorityFocusTopic: 'Integrated Database Architecture & Workflow Mapping',
-      },
-      {
-        courseName: 'Business Mathematics',
-        recommendedHours: 5,
-        priorityFocusTopic: 'Marginal Analysis & Optimization Derivatives',
-      },
-      {
-        courseName: 'Corporate Finance',
-        recommendedHours: 4.5,
-        priorityFocusTopic: 'Weighted Average Cost of Capital (WACC) & Tax Shields',
-      }
-    ],
-    weeklyStudyTip: 'Use interleaved practice: alternate between quantitative courses (Business Math, Corporate Finance) and conceptual courses (B2C, ERP) in 45-minute blocks.',
+    )} hours of active study across your course curriculum. Uploading your lecture slides enables precision quiz drills tailored to your professor's material.`,
+    overallScoreGrade: strongCourses.length > 0 ? 'B+' : 'Pending',
+    strongestCourses: strongCourses.length > 0 ? strongCourses : courseNames.slice(0, 2),
+    atRiskCourses: atRisk,
+    recommendedStudySplit: recommendedSplit,
+    weeklyStudyTip: 'Spacing effect: Taking your slide quizzes 24-48 hours after reading slides produces significantly greater long-term retention than massed reading.',
     generatedAt: new Date().toISOString(),
   };
 }

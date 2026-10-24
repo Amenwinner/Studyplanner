@@ -222,27 +222,75 @@ export const SlidesView: React.FC<SlidesViewProps> = ({
                     type="text"
                     value={topicInput}
                     onChange={(e) => setTopicInput(e.target.value)}
-                    placeholder="e.g. Electrophilic Addition & Carbocation Stability"
+                    placeholder="e.g. Chapter 4: Neural Networks or Week 3 Lecture Notes"
                     className="w-full text-sm font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-2.5 focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div className="flex-1 flex flex-col">
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs font-semibold text-slate-500">
-                      Slide Notes / Outline / Transcripts
-                    </label>
-                    <span className="text-[11px] text-slate-400">
-                      Tip: Separate slides using `--- Slide 1 ---`
-                    </span>
+                  <div className="flex items-center justify-between mb-1.5 flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      <label className="text-xs font-semibold text-slate-500">
+                        Slide Notes / Transcripts / Extracted Text
+                      </label>
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                        {slidesInput.split(/\s+/).filter(Boolean).length} words
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const slideNum = (slidesInput.match(/---\s*Slide/gi)?.length || 0) + 1;
+                          setSlidesInput((prev) => `${prev.trimEnd()}\n\n--- Slide ${slideNum}: Topic ---\n`);
+                        }}
+                        className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        + Insert Slide Divider
+                      </button>
+                      <label className="cursor-pointer text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+                        Upload File
+                        <input
+                          type="file"
+                          accept=".txt,.md,.text,.pdf"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
                   </div>
                   <textarea
                     value={slidesInput}
                     onChange={(e) => setSlidesInput(e.target.value)}
                     rows={16}
-                    placeholder={`Paste lecture slide notes or bullet points here...\n\n--- Slide 1: Introduction ---\nKey concepts...\n\n--- Slide 2: Theorems & Mechanisms ---\nDetails...`}
+                    placeholder={`Paste your lecture slide text, notes, or bullet points here...\n\n--- Slide 1: Introduction & Overview ---\n• Core principles and definitions...\n\n--- Slide 2: Governing Equations & Rules ---\n• Key mathematical or conceptual relations...\n\n--- Slide 3: Application & Case Studies ---\n• Examples and exam traps...`}
                     className="w-full flex-1 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-3 leading-relaxed focus:ring-2 focus:ring-blue-500"
                   />
+                </div>
+
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-[11px] text-slate-400">
+                    Questions and flashcards will be strictly grounded in this text.
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(false)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      disabled={!slidesInput.trim()}
+                      className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded-lg text-xs shadow-sm flex items-center gap-1.5"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Save Slide Notes</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : parsedSlides.length > 0 ? (
@@ -296,21 +344,33 @@ export const SlidesView: React.FC<SlidesViewProps> = ({
               </div>
             ) : (
               <div className="p-12 text-center flex-1 flex flex-col items-center justify-center">
-                <Presentation className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-3" />
-                <h3 className="font-bold text-slate-800 dark:text-slate-200 mb-1">
+                <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4 border border-blue-200 dark:border-blue-900 shadow-sm">
+                  <Presentation className="w-8 h-8" />
+                </div>
+                <h3 className="font-extrabold text-base text-slate-800 dark:text-slate-200 mb-1">
                   No Slides Uploaded for Week {currentWeek}
                 </h3>
-                <p className="text-xs text-slate-500 max-w-sm mb-4">
-                  Paste your professor's lecture slides or drag-and-drop a text file to enable AI active recall quizzes, summaries, and flashcards.
+                <p className="text-xs text-slate-500 max-w-sm mb-5 leading-relaxed">
+                  Paste your professor's lecture slides or upload a text file to enable AI active recall quizzes, summaries, and flashcards derived strictly from this week's content.
                 </p>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center justify-center gap-3">
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5"
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-blue-600/20"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
-                    <span>Paste Slide Text</span>
+                    <span>Paste Slide Notes</span>
                   </button>
+                  <label className="cursor-pointer px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-xs flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-slate-600">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload File (.txt, .md, .pdf)</span>
+                    <input
+                      type="file"
+                      accept=".txt,.md,.text,.pdf"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
               </div>
             )}
