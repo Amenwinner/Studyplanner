@@ -259,7 +259,6 @@ export const QuizView: React.FC<QuizViewProps> = ({
   const handleBatchGenerate60 = async () => {
     const slideContent = weekModule?.slidesRaw || '';
     if (!slideContent.trim()) {
-      alert('Please upload or paste lecture slides before generating questions.');
       return;
     }
 
@@ -308,7 +307,6 @@ export const QuizView: React.FC<QuizViewProps> = ({
       setBatchProgress(null);
     } catch (err: any) {
       console.error(err);
-      alert('Failed to complete batch generation: ' + err.message);
     } finally {
       setIsBatchGenerating(false);
     }

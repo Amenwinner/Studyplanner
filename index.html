@@ -10,7 +10,18 @@
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <script>
-      // Suppress benign dev-server WebSocket disconnect errors in iFrame dev previews
+      // 1. GitHub Pages trailing-slash fix: Ensure relative asset paths resolve to repo folder
+      if (
+        window.location.pathname &&
+        !window.location.pathname.endsWith('/') &&
+        !window.location.pathname.split('/').pop().includes('.')
+      ) {
+        window.location.replace(
+          window.location.pathname + '/' + window.location.search + window.location.hash
+        );
+      }
+
+      // 2. Suppress benign dev-server WebSocket disconnect errors in iFrame dev previews
       window.addEventListener('unhandledrejection', function (event) {
         if (
           event.reason &&
@@ -31,8 +42,19 @@
       });
     </script>
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div id="root">
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #0f172a; color: #94a3b8; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="text-align: center; padding: 24px;">
+          <div style="width: 44px; height: 44px; border: 3px solid #334155; border-top-color: #6366f1; border-radius: 50%; margin: 0 auto 16px; animation: septem-spin 0.8s linear infinite;"></div>
+          <div style="font-size: 16px; font-weight: 600; color: #f8fafc; margin-bottom: 6px;">SeptemStudy</div>
+          <div style="font-size: 13px; color: #94a3b8;">Loading 6-course academic workspace...</div>
+        </div>
+      </div>
+      <style>
+        @keyframes septem-spin { to { transform: rotate(360deg); } }
+      </style>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

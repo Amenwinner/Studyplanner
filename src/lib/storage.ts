@@ -13,7 +13,10 @@ export function loadCourses(): Course[] {
   try {
     const data = localStorage.getItem(STORAGE_KEYS.COURSES);
     if (data) {
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length >= 6) {
+        return parsed;
+      }
     }
   } catch (e) {
     console.error('Failed to load courses from localStorage', e);

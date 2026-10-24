@@ -32,7 +32,7 @@ export default function App() {
   const [courses, setCourses] = useState<Course[]>(() => loadCourses());
   const [activeCourseId, setActiveCourseId] = useState<string>(() => {
     const loaded = loadCourses();
-    return loaded[0]?.id || 'cs-301';
+    return loaded[0]?.id || 'b2c';
   });
   const [currentWeek, setCurrentWeek] = useState<number>(() => loadCurrentWeek());
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
@@ -105,7 +105,7 @@ export default function App() {
     const loadedCourses = loadCourses();
     setCourses(loadedCourses);
     if (!loadedCourses.some((c) => c.id === activeCourseId)) {
-      setActiveCourseId(loadedCourses[0]?.id || 'cs-301');
+      setActiveCourseId(loadedCourses[0]?.id || 'b2c');
     }
     setCurrentWeek(loadCurrentWeek());
     setQuizAttempts(loadQuizAttempts());

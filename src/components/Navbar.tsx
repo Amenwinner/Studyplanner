@@ -55,10 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     reader.onload = (event) => {
       const content = event.target?.result as string;
       if (content && importStudyData(content)) {
-        alert('Semester study data imported successfully!');
         onRefreshData();
-      } else {
-        alert('Invalid study data file format.');
       }
     };
     reader.readAsText(file);
